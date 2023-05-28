@@ -10,3 +10,6 @@ repository = "https://github.com/DunnAnDusted/rjsend"
 readme = "README.md"
 keywords = ["jsend", "encoding", "json", "serialization", "deserialization"]
 categories = ["web-programming", "encoding", "no-std"]
+
+[package.metadata]
+msrv = "1.56.0"
