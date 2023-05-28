@@ -1,0 +1,12 @@
+[package]
+name = "rjsend"
+version = "0.1.0"
+edition = "2021"
+description = "A collection of tools for working with the JSend specification, written in Rust."
+authors = ["Andy <andrew.dunn@ajja.org.uk>"]
+license = "BSD-3-Clause"
+documentation = "https://docs.rs/rjsend/latest/rjsend"
+repository = "https://github.com/DunnAnDusted/rjsend"
+readme = "README.md"
+keywords = ["jsend", "encoding", "json", "serialization", "deserialization"]
+categories = ["web-programming", "encoding", "no-std"]
