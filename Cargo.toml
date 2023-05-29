@@ -17,3 +17,10 @@ msrv = "1.56.0"
 [dependencies]
 serde = { version = "1.*", default-features = false, features = ["derive"] }
 serde_json = { version = "1.*", default-features = false, features = ["alloc"] }
+
+[features]
+rc = ["serde/rc"]
+preserve_order = ["serde_json/preserve_order"]
+arbitrary_precision = ["serde_json/arbitrary_precision"]
+unbounded_depth = ["serde_json/unbounded_depth"]
+float_roundtrip = ["serde_json/float_roundtrip"]
