@@ -1,14 +1,16 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+#![no_std]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+extern crate alloc;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+use core::fmt;
+
+use alloc::string::String;
+use serde::Deserialize;
+
+#[derive(Debug, Clone, PartialEq, Deserialize)]
+pub struct ErrorData<Msg = String, ED = serde_json::Value> {
+    #[serde(bound(deserialize = "Msg: fmt::Display + Deserialize<'de>"))]
+    pub message: Msg,
+    pub code: Option<serde_json::Number>,
+    pub data: Option<ED>,
 }
