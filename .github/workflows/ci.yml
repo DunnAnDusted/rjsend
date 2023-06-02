@@ -23,7 +23,16 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  validate-formatting:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+    - uses: actions/checkout@v3
+    # This library is designed on the stable branch, meaning the check should run on a stable version.
+    - run: cargo +stable fmt --check --verbose
   validate-pull:
+    # Wont be run is formatting is invalid, saving on CI resources
+    needs: validate-formatting
     runs-on: ubuntu-latest
     if: ${{ !github.event.pull_request.draft }}
     strategy:
@@ -50,10 +59,6 @@ jobs:
           ${{ runner.os }}-cargo-
           ${{ runner.os }}-
     - run: rustup update ${{ matrix.toolchain }} && rustup component add clippy --toolchain ${{matrix.toolchain}}
-      # This library is designed on the stable branch, meaning the check should run on a stable version.
-    - name: Validate Formatting
-      if: matrix.toolchain == 'stable'
-      run: cargo +stable fmt --check --verbose
     - name: Validate Clippy
       run: cargo +${{ matrix.toolchain }} clippy -- -D warnings --verbose
     - name: Validate Tests
