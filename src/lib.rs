@@ -7,6 +7,23 @@ use core::fmt;
 use alloc::string::String;
 use serde::{ser::SerializeStruct, Deserialize, Serialize};
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "status")]
+#[serde(rename_all = "lowercase")]
+pub enum RJSend<D, FD, Msg = String, ED = serde_json::Value> {
+    Success {
+        data: D,
+    },
+    Fail {
+        data: FD,
+    },
+    #[serde(bound(
+        deserialize = "ErrorData<Msg, ED>: Deserialize<'de>",
+        serialize = "ErrorData<Msg, ED>: Serialize"
+    ))]
+    Error(ErrorData<Msg, ED>),
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct ErrorData<Msg = String, ED = serde_json::Value> {
     #[serde(bound(deserialize = "Msg: fmt::Display + Deserialize<'de>"))]
