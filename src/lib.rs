@@ -2,7 +2,7 @@
 
 extern crate alloc;
 
-use core::fmt;
+use core::{fmt, marker::PhantomData};
 
 use alloc::string::String;
 use serde::{ser::SerializeStruct, Deserialize, Serialize};
@@ -74,4 +74,10 @@ where
 
         state.end()
     }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct ErrorBuilder<D, FD, Msg, ED> {
+    inner: ErrorData<Msg, ED>,
+    others: PhantomData<(D, FD)>,
 }
