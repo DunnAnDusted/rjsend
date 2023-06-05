@@ -81,3 +81,17 @@ pub struct ErrorBuilder<D, FD, Msg, ED> {
     inner: ErrorData<Msg, ED>,
     others: PhantomData<(D, FD)>,
 }
+
+impl<D, FD, Msg, ED> Clone for ErrorBuilder<D, FD, Msg, ED>
+where
+    ErrorData<Msg, ED>: Clone,
+{
+    fn clone(&self) -> Self {
+        let inner = self.inner.clone();
+
+        Self {
+            inner,
+            others: PhantomData,
+        }
+    }
+}
