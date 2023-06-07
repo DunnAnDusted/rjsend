@@ -25,6 +25,43 @@ pub enum RJSend<D, FD, Msg = String, ED = serde_json::Value> {
     },
 }
 
+// Constructors functions
+impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
+    #[inline]
+    pub const fn new_success(data: D) -> Self {
+        Self::Success { data }
+    }
+
+    #[inline]
+    pub const fn new_fail(data: FD) -> Self {
+        Self::Fail { data }
+    }
+
+    #[inline]
+    pub const fn new_error(message: Msg) -> Self {
+        Self::Error {
+            message,
+            code: None,
+            data: None,
+        }
+    }
+
+    #[inline]
+    pub fn from_fields(
+        ErrorFields {
+            message,
+            code,
+            data,
+        }: ErrorFields<Msg, ED>,
+    ) -> Self {
+        Self::Error {
+            message,
+            code,
+            data,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ErrorFields<Msg, ED> {
     pub message: Msg,
