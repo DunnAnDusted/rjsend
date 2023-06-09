@@ -175,6 +175,83 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
     }
 }
 
+// Expect methods
+impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
+    #[inline]
+    #[track_caller]
+    pub fn expect(self, msg: &str) -> D
+    where
+        FD: fmt::Debug,
+        Msg: fmt::Debug,
+        ED: fmt::Debug,
+    {
+        match self {
+            Self::Success { data } => data,
+            Self::Fail { data } => unwrap_failed(msg, &data),
+            Self::Error {
+                message,
+                code,
+                data,
+            } => unwrap_failed(
+                msg,
+                &ErrorFields {
+                    message,
+                    code,
+                    data,
+                },
+            ),
+        }
+    }
+
+    #[inline]
+    #[track_caller]
+    pub fn expect_fail(self, msg: &str) -> FD
+    where
+        D: fmt::Debug,
+        Msg: fmt::Debug,
+        ED: fmt::Debug,
+    {
+        match self {
+            Self::Fail { data } => data,
+            Self::Success { data } => unwrap_failed(msg, &data),
+            Self::Error {
+                message,
+                code,
+                data,
+            } => unwrap_failed(
+                msg,
+                &ErrorFields {
+                    message,
+                    code,
+                    data,
+                },
+            ),
+        }
+    }
+
+    #[inline]
+    #[track_caller]
+    pub fn expect_error(self, msg: &str) -> ErrorFields<Msg, ED>
+    where
+        D: fmt::Debug,
+        FD: fmt::Debug,
+    {
+        match self {
+            Self::Error {
+                message,
+                code,
+                data,
+            } => ErrorFields {
+                message,
+                code,
+                data,
+            },
+            Self::Success { data } => unwrap_failed(msg, &data),
+            Self::Fail { data } => unwrap_failed(msg, &data),
+        }
+    }
+}
+
 #[inline(never)]
 #[cold]
 #[track_caller]
