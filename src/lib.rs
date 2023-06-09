@@ -294,6 +294,65 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
     }
 }
 
+// Variant evaluation
+impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
+    #[inline]
+    pub const fn is_success(&self) -> bool {
+        matches!(self, Self::Success { .. })
+    }
+
+    #[inline]
+    pub fn is_success_and<F>(self, f: F) -> bool
+    where
+        F: FnOnce(D) -> bool,
+    {
+        match self {
+            Self::Success { data } => f(data),
+            _ => false,
+        }
+    }
+
+    #[inline]
+    pub const fn is_fail(&self) -> bool {
+        matches!(self, Self::Fail { .. })
+    }
+
+    #[inline]
+    pub fn is_fail_and<F>(self, f: F) -> bool
+    where
+        F: FnOnce(FD) -> bool,
+    {
+        match self {
+            Self::Fail { data } => f(data),
+            _ => false,
+        }
+    }
+
+    #[inline]
+    pub const fn is_error(&self) -> bool {
+        matches!(self, Self::Error { .. })
+    }
+
+    #[inline]
+    pub fn is_error_and<F>(self, f: F) -> bool
+    where
+        F: FnOnce(ErrorFields<Msg, ED>) -> bool,
+    {
+        match self {
+            Self::Error {
+                message,
+                code,
+                data,
+            } => f(ErrorFields {
+                message,
+                code,
+                data,
+            }),
+            _ => false,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ErrorFields<Msg, ED> {
     pub message: Msg,
