@@ -353,6 +353,28 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
     }
 }
 
+// Because `ErrorFields` basically maps directly
+// from the `RJSend::Error` variant, it might be useful to have
+// an implementation which maps directly back...
+//
+// This also means `ErrorFields` can be used as an ad hoc builder
+// for the variant as well...
+impl<D, FD, Msg, ED> From<ErrorFields<Msg, ED>> for RJSend<D, FD, Msg, ED> {
+    fn from(
+        ErrorFields {
+            message,
+            code,
+            data,
+        }: ErrorFields<Msg, ED>,
+    ) -> Self {
+        Self::Error {
+            message,
+            code,
+            data,
+        }
+    }
+}
+
 // Derived implementation falls back on some funky old tricks,
 // due to the version of Rust `serde` uses,
 // and I belive it can be more efficient if I implement my own...
