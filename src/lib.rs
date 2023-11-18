@@ -33,6 +33,33 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             data: None,
         }
     }
+
+    #[inline]
+    pub fn from_error_fields(
+        ErrorFields {
+            message,
+            code,
+            data,
+        }: ErrorFields<Msg, ED>,
+    ) -> Self {
+        Self::Error {
+            message,
+            code,
+            data,
+        }
+    }
+}
+
+// Because `ErrorFields` is designed to map to `RJSend::Error` 
+// as directly as possible, it might be useful to have
+// an implementation which maps directly back...
+//
+// This also means `ErrorFields` can be used as an ad hoc builder
+// for the variant as well...
+impl<D, FD, Msg, ED> From<ErrorFields<Msg, ED>> for RJSend<D, FD, Msg, ED> {
+    fn from(fields: ErrorFields<Msg, ED>) -> Self {
+        Self::from_error_fields(fields)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
