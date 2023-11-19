@@ -162,6 +162,28 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             ),
         }
     }
+
+    #[inline]
+    #[track_caller]
+    pub fn expect_error(self, msg: &str) -> ErrorFields<Msg, ED>
+    where
+        D: fmt::Debug,
+        FD: fmt::Debug,
+    {
+        match self {
+            Self::Error {
+                message,
+                code,
+                data,
+            } => ErrorFields {
+                message,
+                code,
+                data,
+            },
+            Self::Success { data } => unwrap_failed(msg, &data),
+            Self::Fail { data } => unwrap_failed(msg, &data),
+        }
+    }
 }
 
 #[inline(never)]
