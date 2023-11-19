@@ -23,6 +23,13 @@ pub enum RJSend<D, FD, Msg = &'static str, ED = serde_json::Value> {
     },
 }
 
+#[inline(never)]
+#[cold]
+#[track_caller]
+fn unwrap_failed(msg: &str, error: &dyn fmt::Debug) -> ! {
+    panic!("{}: {:?}", msg, error)
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ErrorFields<Msg, ED> {
     pub message: Msg,
