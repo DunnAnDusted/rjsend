@@ -23,6 +23,37 @@ pub enum RJSend<D, FD, Msg = &'static str, ED = serde_json::Value> {
     },
 }
 
+// Unwrapping methods
+impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
+    #[inline]
+    #[track_caller]
+    pub fn unwrap(self) -> D
+    where
+        FD: fmt::Debug,
+        Msg: fmt::Debug,
+        ED: fmt::Debug,
+    {
+        match self {
+            Self::Success { data } => data,
+            Self::Fail { data } => {
+                unwrap_failed("called `RJSend::unwrap()` on a `Fail` value", &data)
+            }
+            Self::Error {
+                message,
+                code,
+                data,
+            } => unwrap_failed(
+                "called `RJSend::unwrap()` on an `Error` value",
+                &ErrorFields {
+                    message,
+                    code,
+                    data,
+                },
+            ),
+        }
+    }
+}
+
 #[inline(never)]
 #[cold]
 #[track_caller]
