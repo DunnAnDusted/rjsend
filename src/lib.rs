@@ -80,6 +80,33 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             ),
         }
     }
+
+    #[inline]
+    #[track_caller]
+    pub fn unwrap_error(self) -> ErrorFields<Msg, ED>
+    where
+        D: fmt::Debug,
+        FD: fmt::Debug,
+    {
+        match self {
+            Self::Error {
+                message,
+                code,
+                data,
+            } => ErrorFields {
+                message,
+                code,
+                data,
+            },
+            Self::Success { data } => unwrap_failed(
+                "called `RJSend::unwrap_error()` on a `Success` value",
+                &data,
+            ),
+            Self::Fail { data } => {
+                unwrap_failed("called `RJSend::unwrap_error()` on a `Fail` value", &data)
+            }
+        }
+    }
 }
 
 #[inline(never)]
