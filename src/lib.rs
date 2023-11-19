@@ -2,6 +2,8 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use core::fmt;
+#[cfg(feature = "std")]
+use std::error::Error;
 
 use serde::Deserialize;
 
@@ -50,6 +52,24 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
     }
 }
 
+// `std` dependant contructor functions
+#[cfg(feature = "std")]
+impl<D, FD, ED> RJSend<D, FD, String, ED> {
+    #[inline]
+    pub fn from_error(data: ED) -> Self
+    where
+        ED: Error,
+    {
+        let message = data.to_string();
+
+        Self::Error {
+            message,
+            code: None,
+            data: Some(data),
+        }
+    }
+}
+
 // Because `ErrorFields` is designed to map to `RJSend::Error` 
 // as directly as possible, it might be useful to have
 // an implementation which maps directly back...
@@ -59,6 +79,16 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
 impl<D, FD, Msg, ED> From<ErrorFields<Msg, ED>> for RJSend<D, FD, Msg, ED> {
     fn from(fields: ErrorFields<Msg, ED>) -> Self {
         Self::from_error_fields(fields)
+    }
+}
+
+#[cfg(feature = "std")]
+impl<D, FD, ED> From<ED> for RJSend<D, FD, String, ED>
+where
+    ED: Error,
+{
+    fn from(data: ED) -> Self {
+        Self::from_error(data)
     }
 }
 
