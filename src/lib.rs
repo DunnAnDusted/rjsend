@@ -115,6 +115,17 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => default,
         }
     }
+
+    #[inline]
+    pub fn unwrap_or_else<F>(self, f: F) -> D
+    where
+        F: FnOnce() -> D,
+    {
+        match self {
+            Self::Success { data } => data,
+            _ => f(),
+        }
+    }
 }
 
 // Expect methods
