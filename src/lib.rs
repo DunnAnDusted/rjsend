@@ -126,6 +126,14 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => f(),
         }
     }
+
+    #[inline]
+    pub fn unwrap_or_default(self) -> D
+    where
+        D: Default,
+    {
+        self.unwrap_or_else(Default::default)
+    }
 }
 
 // Expect methods
