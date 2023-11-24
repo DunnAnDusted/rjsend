@@ -30,6 +30,15 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
     pub fn is_success(&self) -> bool {
         matches!(self, Self::Success { .. })
     }
+
+    #[inline]
+    #[must_use]
+    pub fn is_success_and<F: FnOnce(D) -> bool>(self, f: F) -> bool {
+        match self {
+            Self::Success { data } => f(data),
+            _ => false,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
