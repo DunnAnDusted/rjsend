@@ -39,6 +39,12 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => false,
         }
     }
+
+    #[inline]
+    #[must_use]
+    pub fn is_fail(&self) -> bool {
+        matches!(self, Self::Fail { .. })
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
