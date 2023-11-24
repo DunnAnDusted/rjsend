@@ -40,6 +40,22 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => None,
         }
     }
+
+    #[inline]
+    pub fn error(self) -> Option<ErrorFields<Msg, ED>> {
+        match self {
+            Self::Error {
+                message,
+                code,
+                data,
+            } => Some(ErrorFields {
+                message,
+                code,
+                data,
+            }),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
