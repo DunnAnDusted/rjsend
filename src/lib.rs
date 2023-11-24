@@ -23,6 +23,15 @@ pub enum RJSend<D, FD, Msg = &'static str, ED = serde_json::Value> {
     },
 }
 
+// Variant evaluation methods
+impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
+    #[inline]
+    #[must_use]
+    pub fn is_success(&self) -> bool {
+        matches!(self, Self::Success { .. })
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ErrorFields<Msg, ED> {
     pub message: Msg,
