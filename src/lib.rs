@@ -60,6 +60,23 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
     pub fn is_error(&self) -> bool {
         matches!(self, Self::Error { .. })
     }
+
+    #[inline]
+    #[must_use]
+    pub fn is_error_and<F: FnOnce(ErrorFields<Msg, ED>) -> bool>(self, f: F) -> bool {
+        match self {
+            Self::Error {
+                message,
+                code,
+                data,
+            } => f(ErrorFields {
+                message,
+                code,
+                data,
+            }),
+            _ => false,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
