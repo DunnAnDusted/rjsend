@@ -32,6 +32,14 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => None,
         }
     }
+
+    #[inline]
+    pub fn fail(self) -> Option<FD> {
+        match self {
+            Self::Fail { data } => Some(data),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
