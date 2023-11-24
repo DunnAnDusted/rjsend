@@ -23,6 +23,17 @@ pub enum RJSend<D, FD, Msg = &'static str, ED = serde_json::Value> {
     },
 }
 
+// Extractor methods
+impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
+    #[inline]
+    pub fn success(self) -> Option<D> {
+        match self {
+            Self::Success { data } => Some(data),
+            _ => None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ErrorFields<Msg, ED> {
     pub message: Msg,
