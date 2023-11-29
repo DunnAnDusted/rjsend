@@ -464,6 +464,7 @@ where
             }
         }
     }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ErrorFields<Msg, ED> {
