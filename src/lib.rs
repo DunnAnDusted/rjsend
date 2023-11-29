@@ -287,7 +287,7 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => None,
         }
     }
-    
+
     #[inline]
     pub fn fail(self) -> Option<FD> {
         match self {
@@ -329,7 +329,7 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => false,
         }
     }
-    
+
     #[inline]
     #[must_use]
     pub fn is_fail(&self) -> bool {
@@ -344,7 +344,7 @@ impl<D, FD, Msg, ED> RJSend<D, FD, Msg, ED> {
             _ => false,
         }
     }
-    
+
     #[inline]
     #[must_use]
     pub fn is_error(&self) -> bool {
